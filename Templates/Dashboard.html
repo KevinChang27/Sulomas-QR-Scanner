@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+        <title>Sulomas Sdn Bhd</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="topbar">
+                <div class="logo">
+                    <h2>Istvari</h2>
+                </div>
+                <div class="search">
+                    <input type="text" id="search" placeholder="Search for......">
+                    <label for="search"><i class="fas fa-search"></i></label>
+                </div>
+                <div class="col-div-6">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-div">
+                        <p class="noti-head">Notification <span>2</span></p>
+                        <hr/>
+                        <p>Your Order is Placed
+                            <span>Lorem Ipsum is simply dummy</span>
+                        </p>
+                        <p>Your Order is Placed
+                            <span>Lorem Ipsum is simply dummy</span>
+                        </p>
+                        <p>Your Order is Placed
+                            <span>Lorem Ipsum is simply dummy</span>
+                        </p>
+                    </div>
+                </div>
+                <style>
+                    .notification-div{
+                        background-color: rgb(226, 222, 222);
+                        width: 240px;
+                        border: 1px solid #ddd;
+                        padding: 10px 0px;
+                        right: 9%;
+                        border-radius: 5px;
+                        position: absolute;
+                        z-index: 9;
+                        display: none;
+                    }
+                    .notification-div:after{
+                        content: "";
+                        position: absolute;
+                        height: 10px;
+                        width: 10px;
+                        background-color:rgb(226, 222, 222);
+                        top: -6px;
+                        border-left: 1px solid #ddd;
+                        border-top: 1px solid #ddd;
+                        transform: rotate(45deg);
+                        right: 10%;
+                    }
+
+                    .noti-head{
+                        display: block;
+                        margin: 0px;
+                    }
+
+                    .noti-head:hover{
+                        background-color: white !important;
+                        color: #6c7293 !important;
+                    }
+
+                    .noti-head span{
+                        position: absolute;
+                        right: 8%;
+                        top: 10%;
+                        background: #5643ff;
+                        padding: 1px 5px;
+                        color: white;
+                        border-radius: 20px;
+                    }
+
+                    .hr{
+                        margin: 0px;
+                        border: none;
+                        background-color: #ddd;
+                        height: 1px;
+                    }
+
+                    .notification-div p{
+                        margin: 0px;
+                        padding: 10px 20px;
+                    }
+
+                    .notification-div p span{
+                        font-size: 11px;
+                        display: block;
+                    }
+
+                    .notification-div p:hover{
+                        background-color: #5643ff;
+                        color: white;
+                    }
+                </style>
+                <div class="user">
+                    <img src="data:image/jpeg;base64,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TEV8p9nJC1GALtVxDCnbQZiqUxrYXD3sLybmmD5DtBpDoO0EYrRO9ohuVjXr1KlVq2YZnKoMVmyq1RsgelkGSygfjHzmd7ttVVrUadDMFpVaLYplAsA9VVWmxPIEFibdB1kvWmByAHyEFB0HbtDr6c+OtqvxO8OJHHzVWVSletQYEAZajcHDU7/BgWkw3PquyViaj1KQrWoO+pZRTTMQbC6589j8J3zSHQdpsFhK4pidzKusZvBW42IIeoDTGJy01qLlUU1yUxUplb3dijBr+dhynlbamJRVp1MQUY4l1YVMXkKijSs4NbJ+OzowAB0lm8MdBrz0g0h0HaHM4Zn5V5X2s61sR++GK4al7q+2e+7JQ4hPDyfdAWYC9xy5TyHbGKVOHUrFXSrSw7s1YUgTTWrVqvnym2ZTRF7GWdwh0HaDRXzA7SE4bfdX64rEHFUaaVqnCD0ELmvnQuUOIqq3u+/mQqobS1pJd7sRVWiiUSRVrVqaJZ8ptmzPZrHL7itradzhjoO0yVldxjmImN9oZs3abUK60sXiQDTw5Yhqg1NWsxRc1hnKIgF7a5px6m3sZUOJVS9N8QcOcGrKBkRnf3h80p3N/MkSyTSHmB2Ezwx0HaHM4rT62rWhtytXehesaS1uJUKnE8FgrVRTpKvunMQKbnLp99zkn2RQdsXiTxqzU6LIio1S65jTzP5agZ0t8QZIuEOg7CZywtccx3LaIiGxERAREQEREBERAREQEREBERAREQEREBERAREQEREBBiDAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQERED5biIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiIH/9k=" alt="">
+                </div>
+                <div class="navtop">
+                    <a class="Home" href="{{ url_for('dashboard') }}"><i class="fas fa-home"></i>Home</a>
+                    <a class="Profile" href="{{ url_for('profile') }}"><i class="fas fa-user-circle"></i>Profile</a>
+                    <a class="Logout" href="{{ url_for('adminlogout') }}"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                </div>
+            </div>
+            <style>
+                .navtop {
+                  position: fixed;
+                  width: 100%;
+                  text-align: right;
+                  border: 0;
+                  top: 60px;
+                  font-weight: bold;
+                  background: rgb(33, 37, 41);
+                  z-index: 1;
+                }
+                .navtop a{
+                  color: #eaebed;
+                  padding: 0px 10px;
+                }
+                .navtop a:link{
+                  text-decoration: none;
+                }
+                .navtop a:hover{
+                  color: rgb(200, 241, 13);
+                }
+              </style>
+              <!-- Container wrapper -->
+          </nav>
+            <div class="sidebar">
+                <ul>
+                    <li class="active">
+                        <a href="{{ url_for('dashboard') }}">
+                            <i class="fas fa-chart-line"></i>
+                            <div>Dashboard</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('cus') }}">
+                            <i class="fas fa-users"></i>
+                            <div>Customers</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('bin') }}">
+                            <i class="fas fa-dumpster"></i>
+                            <div>Bin Collection</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-truck"></i>
+                            <div>Truck</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-file-alt"></i>
+                            <div>Report</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('scanlist') }}">
+                            <i class="fas fa-tasks"></i>
+                            <div>Scan List</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-map-pin"></i>
+                            <div>Map</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="main">
+                <div class="cards">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="number">$5,500</div>
+                            <div class="card-name">Costing (Monthly)</div>
+                        </div>
+                        <div class="icon-box">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="number">1000</div>
+                            <div class="card-name">Total Bin</div>
+                        </div>
+                        <div class="icon-box">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="number">$215,000</div>
+                            <div class="card-name">Collection (Monthly)</div>
+                        </div>
+                        <div class="icon-box">
+                            <i class="fas fa-clipboard"></i>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="number">50%</div>
+                            <div class="card-name">Completed Collection (Weekly)</div>
+                        </div>
+                        <div class="icon-box">
+                            <i class="fas fa-calendar-week"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="charts">
+                    <div class="chart">
+                        <h2>Earnings Overview</h2>
+                        <canvas id="suloChart"></canvas>
+                    </div>
+                    <div class="chart" id="doughnut-chart">
+                        <h2>Revenue Sources</h2>
+                        <canvas id="doughnut"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <style>
+            * {
+                padding: 0;
+                margin: 0;
+                box-sizing: border-box;
+                font-family: Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+            }
+
+            .topbar{
+                position: fixed;
+                background: rgb(33, 37, 41);
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.08);
+                width: 100%;
+                height: 60px;
+                /*padding: 0 20px;*/
+                display: grid;
+                grid-template-columns: 2fr 10fr 0.4fr 1fr;
+                align-items: center;
+                z-index: 1;
+            }
+
+            .logo h2{
+                color: white;
+            }
+
+            .search{
+                position: relative;
+                width: 60%;
+                justify-self: center;
+            }
+
+            .search input{
+                width: 100%;
+                height: 40px;
+                padding: 0 40px;
+                font-size: 16px;
+                outline: none;
+                border: none;
+                border-radius: 10px;
+                background: #f5f5f5;
+            }
+
+            .search i{
+                position: absolute;
+                right: 15px;
+                top: 15px;
+                cursor: pointer;
+            }
+
+            .user{
+                position: relative;
+                width: 50px;
+                height: 50px;
+            }
+
+            .user img{
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+
+            /* sidebar starts here */
+            .sidebar{
+                position: fixed;
+                top: 60px;
+                width: 260px;
+                height: calc(100% - 60px);
+                background: #62676b;
+                overflow-x: hidden;
+            }
+
+            .sidebar ul{
+                margin-top: 20px;
+            }
+
+            .sidebar ul li{
+                width: 100%;
+                list-style: none;
+            }
+
+            .sidebar ul li:hover,.sidebar ul .active{
+                background: #e4e3e3ab;
+            }
+
+            .sidebar ul .active a{
+                color: #fff;
+            }
+
+            .sidebar ul li:hover a{
+                color: #fff;
+            }
+
+            .sidebar ul li a{
+                width: 100%;
+                text-decoration: none;
+                color: #0d0b16;
+                height: 60px;
+                display: flex;
+                align-items: center;
+            }
+
+            .sidebar ul li a i{
+                min-width: 60px;
+                font-size: 24px;
+                text-align: center;
+            }
+
+            /* main section */
+            .main{
+                position: absolute;
+                top: 60px;
+                width: calc(100% - 260px);
+                left: 260px;
+                min-height: calc(100vh - 60px);
+                background: #4d5a5e;
+            }
+
+            .cards{
+                width: 100%;
+                padding: 35px 20px;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                grid-gap: 20px;
+            }
+
+            .cards .card{
+                padding: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: #fff;
+                border-radius: 10px;
+                box-shadow: 0 7px 25px 0 rgba(0, 0, 0, 0.8);
+            }
+
+            .cards .card:hover{
+                background: #e4e3e3ab;
+            }
+
+            .cards .card:hover .number{
+                color: #fff;
+            }
+
+            .cards .card:hover .card-name{
+                color: #fff;
+            }
+
+            .cards .card:hover .icon-box i{
+                color: #fff;
+            }
+
+            .number{
+                font-size: 35px;
+                font-weight: 500;
+            }
+
+            .card-name{
+                color: #888;
+                font-weight: 600;
+            }
+
+            .icon-box i{
+                font-size: 45px;
+                color: #4d5a5e;
+            }
+
+            .fa-bell{
+                color: #fff;
+            }
+            /* charts starts here*/
+            .charts{
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                grid-gap: 20px;
+                width: 100%;
+                padding: 20px;
+                padding-top: 0;
+            }
+
+            .chart{
+                background: #fff;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+                width: 99%;
+            }
+
+            .chart h2{
+                margin-bottom: 5px;
+                font-size: 20px;
+                color: #666;
+                text-align: center;
+            }
+
+            /* reponsive starts here*/
+            @media (max-width:1115px){
+                .sidebar{
+                    width: 60px;
+                }
+                .main{
+                    left: 60px;
+                    width: calc(100% - 60px);
+                }
+            }
+
+            @media (max-width:880px){
+                .cards{
+                    grid-template-columns: repeat(2, 1fr);
+                }
+                .charts{
+                    grid-template-columns: 1fr;
+                }
+                #doughnut-chart{
+                    padding: 50px;
+                }
+                #doughnut{
+                    padding: 50px;
+                }
+            }
+
+            @media (max-width:500px){
+                .topbar{
+                    grid-template-columns: 1fr 5fr 0.4fr 1fr;
+                }
+                .cards{
+                    grid-template-columns: 1fr;
+                }
+                .logo h2{
+                    font-size: 20px;
+                }
+                .search{
+                    width: 80%;
+                }
+                .search input{
+                    padding: 0 20px;
+                }
+                .fa-bell{
+                    margin-right: 5px;
+                }
+                .user{
+                    width: 40px;
+                    height: 40px;
+                }
+                #doughnut-chart{
+                    padding: 10px;
+                }
+                #doughnut{
+                    padding: 0;
+                }
+            }
+        </style>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
+        <script>
+            const ctx = document.getElementById('suloChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'earning in $',
+                        data: [10000, 15000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 110000, 200000, 250000],
+                        backgroundColor: [
+                            '#62676b'
+                        ],
+                        borderColor: [
+                            '#4d5a5e'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        </script>
+        <script>
+            const ctx1 = document.getElementById('doughnut').getContext('2d');
+            const mydoughnutChart = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Social', 'Direct', 'Referral', 'Others'],
+                    datasets: [{
+                        label: 'Revenue Sources',
+                        data: [15, 55, 30, 6],
+                        backgroundColor: [
+                            'rgb(60, 60, 60)',
+                            'rgb(90, 90, 90)',
+                            'rgb(120, 120, 120)',
+                            'rgb(180, 180, 180)',
+                        ],
+                        borderColor: [
+                            'rgb(60, 60, 60)',
+                            'rgb(90, 90, 90)',
+                            'rgb(120, 120, 120)',
+                            'rgb(180, 180, 180)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        </script>
+    </body>
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".fa-bell").click(function(){
+            $(".notification-div").toggle();
+        })
+    })
+</script>

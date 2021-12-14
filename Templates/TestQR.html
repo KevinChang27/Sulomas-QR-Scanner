@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/v4-shims.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Sulomas Sdn Bhd</title>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div>
+    <img class="navbar-brand" style="max-width:30%; height:auto" src="https://sys2001-dot-istvari-project-5001.ue.r.appspot.com/static/img/istavari_logo2.png" alt="responsive image">
+    </div>
+    <!-- Container wrapper -->
+    </nav>
+          <!--For taskbar css-->
+              <style>
+                @media only screen and (max-width: 650px) {
+                .navbar-brand {
+                position: relative;
+                left: 50%;
+                transform: translateX(-50%);
+                }
+                }
+              </style>
+    <!--QR Scanner Content-->          
+    <div class="container py-5">
+        <div class="row">
+            <div class="mx-auto col-lg-5 bg-white p-3 shadow rounded">
+                <h1 class="text-center mb-3 fw-bold">QR Code Scanner</h1>
+
+                <div class="my-3">
+                  <video class="embed-responsive-item" id="preview" width="100%"></video>
+                  <form action="/testQR.html" method="POST" name="myForm" id="myForm">
+                    <input type="text" name="text" id="text" readonly class="form-control" style="text-align: center; font-weight: bold; background-color: white; border: hidden;"/>
+                  </form>
+                </div>
+                    
+                    <div class="wrap">
+                      <div class="item">
+                        <button id="front" class="btn-outline" onclick="Front()" name="options">First Camera</button>
+                      </div>
+                      <div class="item">
+                        <button id="back" class="btn-outline2" onclick="Back()" name="options">Second Camera</button>
+                      </div>
+                    </div>
+                    <div class="Right" style="float: right;">
+                    <button type="submit" name="submit" class="selectnone" id="savedata" onclick="submit()">
+                      <span class="savedata1">Logout</span>
+                      <svg class="savedata2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24">
+                        <path d="M0 11c2.761.575 6.312 1.688 9 3.438 3.157-4.23 8.828-8.187 15-11.438-5.861 5.775-10.711 12.328-14 18.917-2.651-3.766-5.547-7.271-10-10.917z"/>
+                      </svg>
+                    </button>
+                    </div>
+                    <div class="Left" style="float: left;">
+                      <button type="submit" name="submit" class="selectnone" id="savedata" onclick="capture()">
+                        <span class="savedata1">Capture Image</span>
+                        <svg class="savedata2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24">
+                          <path d="M0 11c2.761.575 6.312 1.688 9 3.438 3.157-4.23 8.828-8.187 15-11.438-5.861 5.775-10.711 12.328-14 18.917-2.651-3.766-5.547-7.271-10-10.917z"/>
+                        </svg>
+                      </button>
+                      </div>
+            </div>
+        </div>
+    </div>
+      <!--For btn camera-->
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap');
+        .wrap{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .item{
+          padding: 10px;
+        }
+        .btn-outline{
+          outline: none;
+          display: block;
+          border: 0;
+          font-size: 16px;
+          line-height: 1;
+          padding: 16px 30px;
+          border-radius: 30px;
+          background: #0d6efd;
+          color: #ffffff;
+          cursor: pointer;
+          transition: all 0.3s linear;
+          font-family: 'Montserrat',sans-serif;
+        }
+
+        .btn-outline:hover,
+        .btn-outline:focus{
+            background: #005C99;
+        }
+        .btn-outline:active{
+          background: #003659;
+        }
+        .btn-outline2{
+          outline: none;
+          display: block;
+          border: solid 1px #0d6efd;
+          font-size: 16px;
+          font-weight: 500;
+          line-height: 1;
+          padding: 16px 30px;
+          border-radius: 30px;
+          background: #ffffff;
+          color: #0d6efd;
+          cursor: pointer;
+          transition: all 0.3s linear;
+          font-family: 'Montserrat',sans-serif;
+        }
+        .btn-outline2:hover,
+        .btn-outline2:focus{
+            background: #0d6efd;
+            color: #ffffff;
+        }
+        .btn-outline2:active{
+          background: #0d6efd;
+        }
+      </style>
+      <!--For btn save data-->
+      <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins');
+
+        .selectnone{
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -khtml-user-select:none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          -webkit-tap-highlight-color: transparent;
+        }
+        #savedata{
+          width: 150px;
+          height: 50px;
+          background: none;
+          border: 2px solid #166ae7;
+          border-radius: 50px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: .4s;
+        }
+
+        #savedata:hover{
+          width: 170px;
+          box-shadow: 0px 10px 10px rgba(0,0,0,4);
+        }
+
+        .savedata1,.savedata2{
+          position: absolute;
+          color:#166ae7;
+          fill: transparent;
+          transition: 0.4s;
+        }
+
+        #savedata:hover .savedata1{
+          transition: 0.4s;
+          font-size: 16px;
+        }
+
+        #savedata:focus{
+          outline: none;
+          box-shadow: none;
+          border: 2px solid transparent;
+          width: 50px;
+          border-left: 2px solid #166ae7;
+          border-bottom: 2px solid #166ae7;
+          animation: spin 2s 500ms forwards;
+        }
+
+        #savedata:focus .savedata1{
+          color: transparent;
+        }
+
+        #savedata:focus .savedata2{
+          animation: check 500ms 2300ms forwards;
+        }
+
+        @keyframes spin{
+          80% {
+            border: 2px solid transparent;
+            border-left: 2px solid #166ae7;
+          }
+          100% {
+            transform: rotate(1080deg);
+            border: 2px solid #166ae7;
+          } 
+        }
+
+        @keyframes check {
+          to {
+            fill: #166ae7;
+          }
+        }
+
+        @keyframes circle {
+          to {
+            border: 2px solid #166ae7;
+          }
+        }
+      </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js" rel="nofollow"></script>
+<script type="text/javascript">
+  var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5, mirror: false });
+  scanner.addListener('scan',function(content){
+
+      alert(content);
+      document.getElementById('text').value=content;
+      document.forms["myForm"].submit();
+      //window.location.href=content;
+  });
+
+  function Front(){
+    scanner.stop();
+    Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+          scanner.start(cameras[0]);
+        } else {
+          console.error('No cameras found.');
+        }
+      })    
+      .catch(function (e) {
+        console.error(e);
+      }); 
+  } 
+
+  function Back(){
+    scanner.stop();
+    Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+          scanner.start(cameras[1]);
+        } else {
+          console.error('No cameras found.');
+        }
+      })    
+      .catch(function (e) {
+        console.error(e);
+      }); 
+  } 
+</script>
+
+<script>
+  function submit()
+  {
+    setTimeout(function() {alert('Thank You!'); window.location.href="{{ url_for('logout') }}"},2500);
+  }
+  function capture()
+  {
+    alert('Press OK to continue!'); 
+    window.location.href="{{ url_for('Cam') }}";
+  }
+</script>
