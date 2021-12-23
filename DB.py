@@ -236,6 +236,26 @@ def cus():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
+
+@app.route("/customersview")
+def customersview():
+    if 'Loggedin' in session:
+        id=session['ID']
+        username=session['Username']
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor) 
+        cur.execute("""SELECT * FROM accounts""")
+        data = cur.fetchall()
+        history = []
+        content = {}
+        for result in data:
+            content = {'id': result['id'],'username': result['username'],'email': result['email'],'phone_no': result['phone_no']}
+            history.append(content)
+            content={}
+        # User is loggedin show them the home page
+        return jsonify(clients = history)
+    # User is not loggedin redirect to login page
+    return redirect(url_for('adminlogin'))
+
 @app.route("/scanlisthistory")
 def scanlist():
     if 'Loggedin' in session:
