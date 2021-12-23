@@ -296,6 +296,116 @@ def JsBinCollection():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
+@app.route("/RegisOperator.html", methods=['GET', 'POST'])
+def Operator():
+    # Output message if something goes wrong...
+    msg = ''
+    if 'Loggedin' in session:
+        if request.method == 'POST' and 'username' in request.form and 'cpassword' in request.form and 'email' in request.form and 'phone_num' in request.form:
+            # Create variables for easy access
+            username = request.form['username']
+            password = request.form['cpassword']
+            email = request.form['email']
+            phone_num = request.form['phone_num']
+            # Check if account exists using MySQL
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM accounts WHERE username = %s OR email = %s', (username,email,))
+            account = cursor.fetchone()
+            # If account exists show error and validation checks
+            if account:
+                msg = 'Account already exists!'
+            elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+                msg = 'Invalid email address!'
+            elif not re.match(r'[A-Za-z0-9]+', username):
+                msg = 'Username must contain only characters and numbers!'
+            elif not username or not password or not email:
+                msg = 'Please fill out the form!'
+            else:
+                # Account doesnt exists and the form data is valid, now insert new account into accounts table
+                cursor.execute('INSERT INTO accounts VALUES (NULL, %s, md5(%s), %s, %s)', (username, password, email,phone_num,))
+                mysql.connection.commit()
+                msg = 'You have successfully registered!'
+        # elif request.method == 'POST':
+        #     # Form is empty... (no POST data)
+        #     msg = 'Please fill out the form!'
+        elif request.method == 'POST' and 'Bincode' in request.form and 'address' in request.form and 'lat' in request.form and 'longit' in request.form and 'description' in request.form:
+            # Create variables for easy access
+            Bincode = request.form['Bincode']
+            address = request.form['address']
+            description = request.form['description']
+            lat = request.form['lat']
+            longit = request.form['longit']
+            # Check if account exists using MySQL
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM bincollection WHERE BIN_CODE = %s', (Bincode,))
+            matchbincode = cursor.fetchone()
+            if matchbincode:
+                sql = "UPDATE bincollection SET ACC_ID = 0,Address=%s,Description=%s,Latitude=%s,Longtitude=%s,DATETIME='0000-00-00 00:00:00',Status='Not Collected' WHERE BIN_CODE=%s"
+                data = (address,description,lat,longit,Bincode,)
+                cursor.execute(sql, data)
+                mysql.connection.commit()
+            else:
+                cursor.execute('INSERT INTO bincollection VALUES (NULL, 0, %s, %s, %s, %s, %s,"0000-00-00 00:00:00","Not Collected")', ( Bincode, address, lat, longit, description,))
+                mysql.connection.commit()
+                # binmsg = 'You have successfully applied!'
+        # Show registration form with message (if any)
+        return render_template('RegisOperator.html', msg=msg)
+    # User is not loggedin redirect to login page
+    return redirect(url_for('adminlogin'))
+
+@app.route("/Operator.html")
+def KpiOperator():
+    return render_template('KpiOperator.html')
+
+@app.route("/DailyTask.html", methods=['GET', 'POST'])
+def DailyTask():
+    if 'Loggedin' in session:
+        cursor = mysql.connection.cursor() 
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        result = cur.execute('SELECT * FROM accounts ORDER BY id')
+        name = cur.fetchall()
+        if name:
+            cursor = mysql.connection.cursor()
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            result = cur.execute("SELECT * FROM bincollection ORDER BY ID")
+            data = cur.fetchall()   
+        return render_template('TaskPlanning.html',name = name, data = data)
+    # User is not loggedin redirect to login page
+    return redirect(url_for('adminlogin'))
+
+@app.route("/DailyTask", methods=['GET', 'POST'])
+def Task():
+    if 'Loggedin' in session:
+        if request.method == 'POST':
+            name = request.form['username']
+            date = request.form['date']
+            cursor = mysql.connection.cursor()
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            for getid in request.form.getlist('mycheckbox'):
+                cursor.execute('SELECT BIN_CODE FROM bincollection WHERE ID = {0}'.format(getid))
+                matchbincode = cursor.fetchone()
+                if matchbincode:
+                    cursor.execute('SELECT * FROM dailytask WHERE BIN_CODE = %s', (matchbincode,))
+                    matcode = cursor.fetchone()
+                    if matcode:
+                        sql = "UPDATE dailytask SET username = %s,Datetime=%s WHERE BIN_CODE=%s"
+                        data = (name,date,matchbincode,)
+                        cursor.execute(sql, data)
+                        mysql.connection.commit()
+                    else:
+                        cursor.execute('INSERT INTO dailytask VALUES (NULL, %s, %s, %s)', ( name, matchbincode, date,))
+                        mysql.connection.commit()
+                cur.execute('SELECT * FROM accounts WHERE username = %s', (name,))
+                ppl = cur.fetchone()
+                if ppl:
+                    sql = "UPDATE bincollection SET ACC_ID=%s,DATETIME='0000-00-00 00:00:00',Status='Not Collected' WHERE BIN_CODE=%s"
+                    sop = (ppl['id'],matchbincode,)
+                    cursor.execute(sql, sop)
+                    mysql.connection.commit()
+            return redirect(url_for('DailyTask'))   
+    # User is not loggedin redirect to login page
+    return redirect(url_for('adminlogin'))
+
 @app.route("/Test.html")
 def Test():
     return render_template('Test.html')
