@@ -16,7 +16,7 @@ app.config['MYSQL_DB'] = 'sulomas'
 
 mysql = MySQL(app)
 
-@app.route("/testQR.html", methods = ['GET', 'POST'])
+@app.route("/testQR", methods = ['GET', 'POST'])
 def QR():
     if 'loggedin' in session:
         id=session['id']
@@ -39,11 +39,11 @@ def QR():
                     cursor.execute("""UPDATE bincollection SET Status = ('Collected'),DATETIME = %s WHERE BIN_CODE = %s AND ACC_ID = %s""", (current_time,key,id))
                     mysql.connection.commit()
                     cursor.close()
-        return render_template('TestQR.html')
+        return render_template('testqr.html')
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
-@app.route("/camera.html")
+@app.route("/camera")
 def Cam():
     if 'loggedin' in session:
         # User is loggedin show them the home page
@@ -51,7 +51,7 @@ def Cam():
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
-@app.route("/adminlogin.html", methods=['GET', 'POST'])
+@app.route("/adminlogin", methods=['GET', 'POST'])
 def adminlogin():
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
@@ -74,9 +74,9 @@ def adminlogin():
         else:
             # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
-    return render_template('AdminLogin.html', msg=msg)
+    return render_template('adminlogin.html', msg=msg)
 
-@app.route("/login.html", methods=['GET', 'POST'])
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
@@ -99,7 +99,7 @@ def login():
         else:
             # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
-    return render_template('Login.html', msg=msg)
+    return render_template('login.html', msg=msg)
 
 @app.route('/admin/login/logout')
 def adminlogout():
@@ -119,7 +119,7 @@ def logout():
    # Redirect to login page
    return redirect(url_for('login'))
 
-@app.route("/register.html", methods=['GET', 'POST'])
+@app.route("/register", methods=['GET', 'POST'])
 def reg():
         # Output message if something goes wrong...
     msg = ''
@@ -151,9 +151,9 @@ def reg():
         # Form is empty... (no POST data)
         msg = 'Please fill out the form!'
     # Show registration form with message (if any)
-    return render_template('Register.html', msg=msg)   
+    return render_template('register.html', msg=msg)   
 
-@app.route("/forgot.html", methods=['GET', 'POST'])
+@app.route("/forgot", methods=['GET', 'POST'])
 def Forgot():
         # Output message if something goes wrong...
     msg = ''
@@ -182,9 +182,9 @@ def Forgot():
                 msg = 'You have successfully reset your password!'
         else:
             msg = 'Please Enter The Correct Email'
-    return render_template('Forget_Password.html',msg=msg)
+    return render_template('forget_password.html',msg=msg)
 
-@app.route("/ProfilePage.html", methods=['GET', 'POST'])
+@app.route("/ProfilePage", methods=['GET', 'POST'])
 def profile():
     msg = ''
     if 'Loggedin' in session:
@@ -214,29 +214,29 @@ def profile():
                     mysql.connection.commit()
                     msg = 'You have successfully update your profile!'
         # User is loggedin show them the ProfilePage page
-        return render_template('ProfilePage.html', username=session['Username'],data=data,msg=msg)
+        return render_template('profilepage.html', username=session['Username'],data=data,msg=msg)
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))    
 
-@app.route("/dashboard.html")
+@app.route("/dashboard")
 def dashboard():
         # Check if user is loggedin
     if 'Loggedin' in session:
         # User is loggedin show them the home page
-        return render_template('Dashboard.html', username=session['Username'])
+        return render_template('dashboard.html', username=session['Username'])
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
-@app.route("/customers.html")
+@app.route("/customers")
 def cus():
         # Check if user is loggedin
     if 'Loggedin' in session:
         # User is loggedin show them the home page
-        return render_template('Customer.html', username=session['Username'])
+        return render_template('customer.html', username=session['Username'])
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
-@app.route("/scanlist.html")
+@app.route("/scanlisthistory")
 def scanlist():
     if 'Loggedin' in session:
         id=session['ID']
@@ -268,12 +268,12 @@ def list():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
-@app.route("/bin.html")
+@app.route("/bin")
 def bin():
         # Check if user is loggedin
     if 'Loggedin' in session:
         # User is loggedin show them the home page
-        return render_template('BinCollection.html', username=session['Username'])
+        return render_template('bincollection.html', username=session['Username'])
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
     
@@ -296,7 +296,7 @@ def JsBinCollection():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
-@app.route("/RegisOperator.html", methods=['GET', 'POST'])
+@app.route("/RegisOperator", methods=['GET', 'POST'])
 def Operator():
     # Output message if something goes wrong...
     msg = ''
@@ -349,15 +349,38 @@ def Operator():
                 mysql.connection.commit()
                 # binmsg = 'You have successfully applied!'
         # Show registration form with message (if any)
-        return render_template('RegisOperator.html', msg=msg)
+        return render_template('regisoperator.html', msg=msg)
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
-@app.route("/Operator.html")
+@app.route("/Operator")
 def KpiOperator():
-    return render_template('KpiOperator.html')
+    if 'Loggedin' in session:
+    # User is loggedin show them the home page
+        return render_template('kpioperator.html')
+    # User is not loggedin redirect to login page
+    return redirect(url_for('adminlogin'))
 
-@app.route("/DailyTask.html", methods=['GET', 'POST'])
+@app.route("/taskschedule")
+def taskschedule():
+    if 'Loggedin' in session:
+        id=session['ID']
+        username=session['Username']
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor) 
+        cur.execute("""SELECT * FROM dailytask""")
+        data = cur.fetchall()
+        history = []
+        content = {}
+        for result in data:
+            content = {'ID': result['ID'],'username': result['username'],'BIN_CODE': result['BIN_CODE'],'Datetime': result['Datetime']}
+            history.append(content)
+            content={}
+        # User is loggedin show them the home page
+        return jsonify(schedule = history)
+    # User is not loggedin redirect to login page
+    return redirect(url_for('adminlogin'))
+
+@app.route("/TaskSchedule", methods=['GET', 'POST'])
 def DailyTask():
     if 'Loggedin' in session:
         cursor = mysql.connection.cursor() 
@@ -369,7 +392,7 @@ def DailyTask():
             cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             result = cur.execute("SELECT * FROM bincollection ORDER BY ID")
             data = cur.fetchall()   
-        return render_template('TaskPlanning.html',name = name, data = data)
+        return render_template('taskplanning.html',name = name, data = data)
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
@@ -406,6 +429,6 @@ def Task():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
-@app.route("/Test.html")
+@app.route("/Test")
 def Test():
-    return render_template('Test.html')
+    return render_template('test.html')
