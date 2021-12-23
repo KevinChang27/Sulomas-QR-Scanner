@@ -187,17 +187,17 @@
                     
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">View Customer</h1>
+        <h1 class="h3 mb-0 text-gray-800">View Operators</h1>
         <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                 class="fas fa-download fa-sm text-white-80"></i>   Export</a> -->
         <!-- <a href="/bin/geocoding" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
             <i class="fas fa-download fa-sm text-white-50"></i> Get Latitude & Longitude</a>  -->
-        <div>
-            <a href="/customer/map_customer" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                <i class="fas fa-map fa-sm text-white-100"></i> View Customer On Map</a>
-            <a href="/customer/create_customer" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                <i class="fas fa-user fa-sm text-white-100"></i> Add New Customer</a>
-        </div>
+        <!-- <div>
+            <a href="{{ url_for('Operator') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                <i class="fas fa-user-plus fa-sm text-white-100"></i> Operator & Bin Registration</a>
+            <a href="{{ url_for('DailyTask') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                <i class="far fa-check-circle fa-sm text-white-100"></i> Task Planning</a>
+        </div> -->
     </div>
     <!-- Content Row -->
     <!-- <div class="row">
@@ -212,33 +212,17 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Dustbin</th>
-                        <th>FullName</th>
+                        <th>List Operator</th>
                         <th>Email</th>
-                        <th>Phone</th>
-                        <th>Latitude</th>
-                        <th>Longitude</th>
-                        <th>Address</th>
-                        <th>Zipcode</th>
-                        <th>Town</th>
-                        <th>Area</th>
-                        <th>UpdateTime</th>
+                        <th>Phone No</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
                         <th>ID</th>
-                        <th>Dustbin</th>
-                        <th>FullName</th>
+                        <th>List Operator</th>
                         <th>Email</th>
-                        <th>Phone</th>
-                        <th>Latitude</th>
-                        <th>Longitude</th>
-                        <th>Address</th>
-                        <th>Zipcode</th>
-                        <th>Town</th>
-                        <th>Area</th>
-                        <th>UpdateTime</th>
+                        <th>Phone No</th>
                     </tr>
                 </tfoot>
             </table>
@@ -816,85 +800,28 @@
     </body>
 </html>
 
-    <script type="text/javascript">
-        var comp = '000'
-        console.log (comp);
-        $('#tableplease tfoot th').each( function () {
-            var title = $(this).text();
-            $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
-        } );
- 
-        // DataTable
-        var table = $('#tableplease').DataTable({
-            initComplete: function () {
-                // Apply the search
-                this.api().columns().every( function () {
-                    var that = this;
-    
-                    $( 'input', this.footer() ).on( 'keyup change clear', function () {
-                        if ( that.search() !== this.value ) {
-                            that
-                                .search( this.value )
-                                .draw();
-                        }
-                    } );
-                } );
-            },
-            ajax: {
-                url: 'https://istvari-project-5001.ue.r.appspot.com/apiv2/customers/read/'+comp,
-                dataSrc: "cordinates"
-            },
-            columns: [
-                { data: 'id' },
-                { data: 'dustbin' },
-                { data: 'full_name' },
-                { data: 'email' },
-                { data: 'phone' },
-                { data: 'latitude' },
-                { data: 'longitude' },
-                { data: 'home_address' },
-                { data: 'zipcode' },
-                { data: 'town' },
-                { data: 'area' },
-                { data: 'update_at' }
-            ],
-            "pageLength": 10,
-            scrollX: true,
-        });
-
+<script>
+    $(document).ready( function () {
+    $('#tableplease').DataTable({
+        ajax: {
+            url: "{{ url_for('customersview') }}",
+            dataSrc: "clients"
+        }    ,
+        columns: [
+        { data: 'id' },
+        { data: 'username' },
+        { data: 'email' },
+        { data: 'phone_no' }
+        ],
+        "pageLength": 10,
+        scrollX: true,
+    });
+} );
         setInterval( function () {
             table.ajax.reload( null, false ); // user paging is not reset on reload
         }, 2000 );
-    </script>
-    <script>
-        function initMap() {
-            const map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 11,
-            center: { lat: 2.9967, lng: 101.7907 },
-            });
-            getISS(map);
-            // setInterval(getISS(map), 1000);
-        }
-        const api_url = 'https://istvari-project-5001.ue.r.appspot.com/apiv2/customers/read/'+comp;
-        async function getISS(map) {
-            const response = await fetch(api_url);
-            const data = await response.json();
-            console.log(data.cordinates);
-            var countKey = Object.keys(data.cordinates).length;
-            console.log(countKey);
-            for (i=0; i< countKey; i++){
-                new google.maps.Marker({
-                        position: {lat: parseFloat(data.cordinates[i].latitude),
-                                    lng: parseFloat(data.cordinates[i].longitude)
-                                },
-                        map,
-                        title: data.cordinates[i].dustbin_code,
-                });
-            }
-        }
-    </script>
+</script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
         $(".fa-bell").click(function(){
