@@ -16,22 +16,27 @@ app.config['MYSQL_DB'] = 'sulomas'
 
 mysql = MySQL(app)
 
+# Here for Operator QR Scanner Part
 @app.route("/testQR", methods = ['GET', 'POST'])
 def QR():
     if 'loggedin' in session:
+        # Operator id and username store using session method
         id=session['id']
         username=session['username']
+        # start connect with database mysql
         cur = mysql.connection.cursor() 
         cur.execute("""SELECT username FROM accounts WHERE id = %s""", (id,))
         data = cur.fetchone()
         if data:
             if  request.method =='POST':
+                # store the result after scanned
                 qrcode_content = request.form['text']
                 cursor = mysql.connection.cursor()
                 cursor.execute("""INSERT INTO qr_scanner (ACC_ID,content) VALUES('%s','%s')""" % (id,qrcode_content))
                 mysql.connection.commit()
                 cursor.close()
                 if  request.method =='POST':
+                    # update the result status such as when the bin is collect then update the datetime and process
                     now = datetime.now()
                     current_time = now.strftime('%Y-%m-%d %H:%M:%S')
                     key = request.form['text']
@@ -39,10 +44,18 @@ def QR():
                     cursor.execute("""UPDATE bincollection SET Status = ('Collected'),DATETIME = %s WHERE BIN_CODE = %s AND ACC_ID = %s""", (current_time,key,id))
                     mysql.connection.commit()
                     cursor.close()
-        return render_template('testqr.html')
+        # here for display the result of the task schedule
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor) 
+        cursor.execute("SELECT * FROM dailytask RIGHT JOIN bincollection ON dailytask.BIN_CODE = bincollection.BIN_CODE WHERE dailytask.username=%s",(username,))
+        number_of_rows = cursor.fetchall()
+        # counting on the status how much the bin is not collected
+        cursor.execute("SELECT * FROM bincollection WHERE Status='Not Collected' AND ACC_ID=%s",(id,))
+        status = cursor.fetchall()
+        return render_template('testqr.html', number_of_rows=number_of_rows, status=status)
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
+# here for camera part and let operator capture the pic
 @app.route("/camera")
 def Cam():
     if 'loggedin' in session:
@@ -51,6 +64,7 @@ def Cam():
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
+# adminlogin page
 @app.route("/adminlogin", methods=['GET', 'POST'])
 def adminlogin():
     msg = ''
@@ -70,12 +84,13 @@ def adminlogin():
             session['ID'] = account['ID']
             session['Username'] = account['Username']
             # Redirect to home page
-            return render_template('Dashboard.html')
+            return redirect(url_for('dashboard'))  
         else:
             # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
     return render_template('adminlogin.html', msg=msg)
 
+# operator login page
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     msg = ''
@@ -95,12 +110,13 @@ def login():
             session['id'] = account['id']
             session['username'] = account['username']
             # Redirect to home page
-            return render_template('TestQR.html')
+            return redirect(url_for('QR'))  
         else:
             # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
     return render_template('login.html', msg=msg)
 
+# admin logout and will direct to admin login page
 @app.route('/admin/login/logout')
 def adminlogout():
     # Remove session data, this will log the user out
@@ -110,6 +126,7 @@ def adminlogout():
    # Redirect to login page
    return redirect(url_for('adminlogin'))
 
+# operator logout and will direct to operator login page
 @app.route('/login/logout')
 def logout():
     # Remove session data, this will log the user out
@@ -119,6 +136,7 @@ def logout():
    # Redirect to login page
    return redirect(url_for('login'))
 
+# admin register page
 @app.route("/register", methods=['GET', 'POST'])
 def reg():
         # Output message if something goes wrong...
@@ -153,6 +171,7 @@ def reg():
     # Show registration form with message (if any)
     return render_template('register.html', msg=msg)   
 
+# admin forgot password page
 @app.route("/forgot", methods=['GET', 'POST'])
 def Forgot():
         # Output message if something goes wrong...
@@ -184,6 +203,7 @@ def Forgot():
             msg = 'Please Enter The Correct Email'
     return render_template('forget_password.html',msg=msg)
 
+# admin profile page to update admin profile
 @app.route("/ProfilePage", methods=['GET', 'POST'])
 def profile():
     msg = ''
@@ -218,6 +238,7 @@ def profile():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))    
 
+# admin dashboard page
 @app.route("/dashboard")
 def dashboard():
         # Check if user is loggedin
@@ -227,6 +248,7 @@ def dashboard():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
+# customers list for admin to monitor
 @app.route("/customers")
 def cus():
         # Check if user is loggedin
@@ -236,7 +258,7 @@ def cus():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
-
+# customers list upload all the file to json and pass it to customers.html
 @app.route("/customersview")
 def customersview():
     if 'Loggedin' in session:
@@ -256,6 +278,7 @@ def customersview():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
+# scanned history list
 @app.route("/scanlisthistory")
 def scanlist():
     if 'Loggedin' in session:
@@ -269,6 +292,7 @@ def scanlist():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
+# scanned history list upload all the file to json and pass it to scanlist.html
 @app.route("/scanlist")
 def list():
     if 'Loggedin' in session:
@@ -288,6 +312,7 @@ def list():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
+# bin collection page
 @app.route("/bin")
 def bin():
         # Check if user is loggedin
@@ -297,6 +322,7 @@ def bin():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
     
+# bin collection upload all the file to json and pass it to bincollection.html
 @app.route("/BinCollection")
 def JsBinCollection():
     if 'Loggedin' in session:
@@ -316,6 +342,7 @@ def JsBinCollection():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
+# admin can register operator and also register the bin
 @app.route("/RegisOperator", methods=['GET', 'POST'])
 def Operator():
     # Output message if something goes wrong...
@@ -373,6 +400,7 @@ def Operator():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
+# admin can know what is the operator next bin need to collect
 @app.route("/Operator")
 def KpiOperator():
     if 'Loggedin' in session:
@@ -381,6 +409,7 @@ def KpiOperator():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
+# taskschedule upload all the file to json and pass it to kpioperator.html
 @app.route("/taskschedule")
 def taskschedule():
     if 'Loggedin' in session:
@@ -400,6 +429,7 @@ def taskschedule():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
+# DailyTask display the operator and bin code for admin apply bin
 @app.route("/TaskSchedule", methods=['GET', 'POST'])
 def DailyTask():
     if 'Loggedin' in session:
@@ -416,6 +446,7 @@ def DailyTask():
     # User is not loggedin redirect to login page
     return redirect(url_for('adminlogin'))
 
+# Task for admin apply what bin need to collect
 @app.route("/DailyTask", methods=['GET', 'POST'])
 def Task():
     if 'Loggedin' in session:
